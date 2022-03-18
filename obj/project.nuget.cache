@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "z5GCUsNaSMaj5uIgTG6X+vejkSDO4v8B5KMamWUMrQYv3l/BzOaAGSEteFd/J+pfUDdmMV3Htxo9VE2lg7TlbQ==",
+  "success": true,
+  "projectFilePath": "/home/rune/src/Foody/Foody.csproj",
+  "expectedPackageFiles": [
+    "/home/rune/.nuget/packages/microsoft.extensions.apidescription.server/3.0.0/microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "/home/rune/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
+    "/home/rune/.nuget/packages/swashbuckle.aspnetcore/6.2.3/swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "/home/rune/.nuget/packages/swashbuckle.aspnetcore.swagger/6.2.3/swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "/home/rune/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.2.3/swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "/home/rune/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.2.3/swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}
