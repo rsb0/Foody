@@ -1,0 +1,1 @@
+Next section: Scaffold a controller
