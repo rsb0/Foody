@@ -23,14 +23,16 @@ namespace Foody.Controllers
 
         // GET: api/FoodItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FoodItem>>> GetFoodItem()
+        public async Task<ActionResult<IEnumerable<FoodItemDTO>>> GetFoodItem()
         {
-            return await _context.FoodItems.ToListAsync();
+            return await _context.FoodItems.
+            Select(x => ItemToDTO(x)).
+            ToListAsync();
         }
 
         // GET: api/FoodItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FoodItem>> GetFoodItem(long id)
+        public async Task<ActionResult<FoodItemDTO>> GetFoodItem(long id)
         {
             var foodItem = await _context.FoodItems.FindAsync(id);
 
@@ -39,35 +41,34 @@ namespace Foody.Controllers
                 return NotFound();
             }
 
-            return foodItem;
+            return ItemToDTO(foodItem);
         }
 
         // PUT: api/FoodItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFoodItem(long id, FoodItem foodItem)
+        public async Task<IActionResult> PutFoodItem(long id, FoodItemDTO foodItemDTO)
         {
-            if (id != foodItem.Id)
+            if (id != foodItemDTO.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(foodItem).State = EntityState.Modified;
+            var foodItem = await _context.FoodItems.FindAsync(id);
+            if (foodItem == null)
+            {
+                return NotFound();
+            }
+
+            foodItem.Name = foodItemDTO.Name;
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!FoodItemExists(id))
             {
-                if (!FoodItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -76,12 +77,25 @@ namespace Foody.Controllers
         // POST: api/FoodItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FoodItem>> PostFoodItem(FoodItem foodItem)
+        public async Task<ActionResult<FoodItemDTO>> PostFoodItem(FoodItemDTO foodItemDTO)
         {
+            var foodItem = new FoodItem
+            {
+                Id = foodItemDTO.Id,
+                Name = foodItemDTO.Name,
+                Brand = foodItemDTO.Brand,
+                Calories = foodItemDTO.Calories,
+                Fat = foodItemDTO.Fat,
+                Carbs = foodItemDTO.Carbs,
+                Protein = foodItemDTO.Protein
+            };
             _context.FoodItems.Add(foodItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetFoodItem", new { id = foodItem.Id }, foodItem);
+            return CreatedAtAction(
+                nameof(GetFoodItem),
+                new { id = foodItem.Id },
+                ItemToDTO(foodItem));
         }
 
         // DELETE: api/FoodItems/5
@@ -104,5 +118,16 @@ namespace Foody.Controllers
         {
             return _context.FoodItems.Any(e => e.Id == id);
         }
+        public static FoodItemDTO ItemToDTO(FoodItem foodItem) =>
+            new FoodItemDTO
+            {
+                Id = foodItem.Id,
+                Name = foodItem.Name,
+                Brand = foodItem.Brand,
+                Calories = foodItem.Calories,
+                Fat = foodItem.Fat,
+                Carbs = foodItem.Carbs,
+                Protein = foodItem.Protein,
+            };
     }
 }
